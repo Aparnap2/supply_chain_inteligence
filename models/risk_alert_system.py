@@ -122,13 +122,13 @@ class RiskAlert:
             'event_id': self.event_id,
             'supplier_id': self.supplier_id,
             'alert_type': self.alert_type,
-            'priority': self.priority.value,
+            'priority': self.priority,
             'title': self.title,
             'message': self.message,
             'threshold_breached': self.threshold_breached,
             'recommended_actions': self.recommended_actions,
             'escalation_level': self.escalation_level,
-            'status': self.status.value,
+            'status': self.status,
             'created_at': self.created_at.isoformat(),
             'acknowledged_at': self.acknowledged_at.isoformat() if self.acknowledged_at else None,
             'acknowledged_by': self.acknowledged_by,
@@ -325,7 +325,7 @@ class RiskAlertSystem:
             # Format title and message
             context = {
                 'supplier_name': supplier.name,
-                'severity': event.severity.value,
+                'severity': event.severity,
                 'probability': event.probability,
                 'impact_score': event.impact_score,
                 'geographic_scope': event.geographic_scope or supplier.country,
@@ -470,7 +470,7 @@ class RiskAlertSystem:
         notification = {
             'id': alert.alert_id,
             'type': 'alert',
-            'priority': alert.priority.value,
+            'priority': alert.priority,
             'title': alert.title,
             'message': alert.message,
             'timestamp': alert.created_at.isoformat(),
@@ -489,11 +489,11 @@ class RiskAlertSystem:
         ]
         
         if priority_filter:
-            alerts = [alert for alert in alerts if alert.priority.value == priority_filter]
+            alerts = [alert for alert in alerts if alert.priority == priority_filter]
         
         # Sort by priority and creation time
         priority_order = {'critical': 0, 'high': 1, 'medium': 2, 'low': 3}
-        alerts.sort(key=lambda a: (priority_order.get(a.priority.value, 4), a.created_at))
+        alerts.sort(key=lambda a: (priority_order.get(a.priority, 4), a.created_at))
         
         return alerts
     
@@ -588,7 +588,7 @@ class RiskAlertSystem:
         # Count by priority
         priority_counts = defaultdict(int)
         for alert in active_alerts:
-            priority_counts[alert.priority.value] += 1
+            priority_counts[alert.priority] += 1
         
         # Count by type
         type_counts = defaultdict(int)
@@ -598,7 +598,7 @@ class RiskAlertSystem:
         # Count by status
         status_counts = defaultdict(int)
         for alert in self.alerts.values():
-            status_counts[alert.status.value] += 1
+            status_counts[alert.status] += 1
         
         # Calculate response times
         acknowledged_alerts = [
@@ -655,7 +655,7 @@ class RiskAlertSystem:
             'statistics': self.get_alert_statistics(),
             'alert_rules': {
                 name: {
-                    'priority': rule['priority'].value,
+                    'priority': rule['priority'],
                     'threshold': rule['threshold']
                 }
                 for name, rule in self.alert_rules.items()

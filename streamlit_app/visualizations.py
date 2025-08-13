@@ -489,7 +489,7 @@ class SupplyChainVisualizations:
             # Calculate risk score and level
             if supplier_risks:
                 risk_score = max(re.calculate_risk_score() * 10 for re in supplier_risks)
-                risk_level = max(re.severity.value for re in supplier_risks)
+                risk_level = max(re.severity for re in supplier_risks)
             else:
                 risk_score = supplier.criticality_score * 0.5
                 risk_level = 'low' if risk_score < 40 else 'medium'

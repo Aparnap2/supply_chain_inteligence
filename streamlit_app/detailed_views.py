@@ -185,7 +185,7 @@ class DetailedAnalysisViews:
                 timeline_data.append({
                     'Date': risk_event.detected_at.date(),
                     'Risk Type': risk_event.event_type.title(),
-                    'Severity': risk_event.severity.value.title(),
+                    'Severity': risk_event.severity.title(),
                     'Impact Score': risk_event.impact_score,
                     'Supplier': risk_event.supplier_id
                 })
@@ -248,7 +248,7 @@ class DetailedAnalysisViews:
         filtered_risks = analysis_result.risk_events
         
         if severity_filter != "All":
-            filtered_risks = [re for re in filtered_risks if re.severity.value.title() == severity_filter]
+            filtered_risks = [re for re in filtered_risks if re.severity.title() == severity_filter]
         
         if type_filter != "All":
             filtered_risks = [re for re in filtered_risks if re.event_type == type_filter]
@@ -258,7 +258,7 @@ class DetailedAnalysisViews:
         
         # Display filtered risk events
         for i, risk_event in enumerate(filtered_risks):
-            with st.expander(f"🚨 {risk_event.event_type.title()} Risk - {risk_event.severity.value.title()} ({risk_event.supplier_id})"):
+            with st.expander(f"🚨 {risk_event.event_type.title()} Risk - {risk_event.severity.title()} ({risk_event.supplier_id})"):
                 
                 col1, col2 = st.columns(2)
                 
@@ -345,7 +345,7 @@ class DetailedAnalysisViews:
                 for risk in supplier_risks:
                     risk_data.append({
                         'Type': risk.event_type.title(),
-                        'Severity': risk.severity.value.title(),
+                        'Severity': risk.severity.title(),
                         'Impact': risk.impact_score,
                         'Probability': f"{risk.probability:.1%}",
                         'Confidence': f"{risk.confidence_level:.1%}",

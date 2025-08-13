@@ -141,7 +141,7 @@ class RiskEventTracker:
                     risk_event.event_id,
                     risk_event.supplier_id,
                     risk_event.event_type,
-                    risk_event.severity if isinstance(risk_event.severity, str) else risk_event.severity.value,
+                    risk_event.severity,
                     risk_event.probability,
                     risk_event.impact_score,
                     risk_event.confidence_level,

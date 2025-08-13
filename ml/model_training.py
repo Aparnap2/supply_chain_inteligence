@@ -297,7 +297,7 @@ class SimpleMLPredictor:
             ]
             
             # Target: highest risk level
-            risk_levels = [e.severity.value for e in supplier_events]
+            risk_levels = [e.severity for e in supplier_events]
             risk_priority = {'low': 0, 'medium': 1, 'high': 2, 'critical': 3}
             target = max(risk_levels, key=lambda x: risk_priority.get(x, 0))
             

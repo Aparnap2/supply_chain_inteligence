@@ -92,8 +92,9 @@ class AnalysisResult(BaseModel):
         distribution = {"low": 0, "medium": 0, "high": 0, "critical": 0}
         
         for risk_event in self.risk_events:
-            if risk_event.severity.value in distribution:
-                distribution[risk_event.severity.value] += 1
+            severity_value = risk_event.severity
+            if severity_value in distribution:
+                distribution[severity_value] += 1
         
         return distribution
     

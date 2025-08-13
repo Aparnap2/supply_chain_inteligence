@@ -22,6 +22,7 @@ from models.scraped_data import ScrapedData
 from models.ml_prediction import MLPrediction
 from streamlit_app.visualizations import SupplyChainVisualizations
 from streamlit_app.utils import DataLoader, DashboardHelpers
+from workflows.agile_workflow import AgileWorkflow
 from streamlit_app.detailed_views import DetailedAnalysisViews
 from streamlit_app.export_reports import ExportReportManager
 
@@ -36,6 +37,7 @@ class SupplyChainDashboard:
         self.visualizations = SupplyChainVisualizations()
         self.detailed_views = DetailedAnalysisViews()
         self.export_manager = ExportReportManager()
+        self.agile_workflow = AgileWorkflow()
     
     def setup_page_config(self):
         """Configure Streamlit page settings."""
@@ -426,7 +428,7 @@ class SupplyChainDashboard:
             # Calculate risk level and score
             if supplier_risks:
                 max_severity = max(risk.severity for risk in supplier_risks)
-                risk_level = max_severity.value.title()
+                risk_level = max_severity.title()
                 risk_score = max(risk.calculate_risk_score() * 10 for risk in supplier_risks)
             elif supplier_predictions:
                 # Use ML prediction if available
@@ -670,6 +672,42 @@ class SupplyChainDashboard:
                 if st.button("Process Upload"):
                     st.info("Processing uploaded data...")
                     # TODO: Implement file processing
+            
+            # Manual data entry option
+            st.subheader("✏️ Quick Manual Entry")
+            if st.button("Add Supplier Manually"):
+                with st.form("manual_supplier"):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        name = st.text_input("Company Name*")
+                        country = st.text_input("Country*")
+                        industry = st.text_input("Industry*")
+                    with col2:
+                        region = st.selectbox("Region*", ["Europe", "Asia Pacific", "North America", "South America", "Africa", "Middle East"])
+                        tier = st.selectbox("Tier*", ["tier_1", "tier_2", "tier_3"])
+                        criticality = st.slider("Criticality Score*", 0, 100, 50)
+                    
+                    website = st.text_input("Website (Optional)")
+                    
+                    if st.form_submit_button("🚀 Add & Analyze"):
+                        if name and country and industry:
+                            supplier_data = {
+                                "name": name,
+                                "country": country,
+                                "region": region,
+                                "industry": industry,
+                                "tier": tier,
+                                "criticality_score": criticality,
+                                "website": website if website else None
+                            }
+                            
+                            # Process single supplier
+                            result = self.agile_workflow.process_manual_input([supplier_data])
+                            st.session_state.analysis_results = result
+                            st.success("Supplier added and analyzed!")
+                            st.rerun()
+                        else:
+                            st.error("Please fill in all required fields (*)")
             
             st.divider()
             

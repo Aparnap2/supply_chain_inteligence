@@ -133,14 +133,14 @@ class EnhancedErrorHandler:
     def _setup_default_strategies(self):
         """Setup default recovery strategies for different error types."""
         self.recovery_strategies = {
-            ErrorCategory.NETWORK.value: self._handle_network_error,
-            ErrorCategory.RATE_LIMIT.value: self._handle_rate_limit_error,
-            ErrorCategory.AUTHENTICATION.value: self._handle_auth_error,
-            ErrorCategory.TIMEOUT.value: self._handle_timeout_error,
-            ErrorCategory.EXTERNAL_SERVICE.value: self._handle_external_service_error,
-            ErrorCategory.DATA_VALIDATION.value: self._handle_validation_error,
-            ErrorCategory.RESOURCE_EXHAUSTION.value: self._handle_resource_error,
-            ErrorCategory.INTERNAL_LOGIC.value: self._handle_internal_error
+            ErrorCategory.NETWORK: self._handle_network_error,
+            ErrorCategory.RATE_LIMIT: self._handle_rate_limit_error,
+            ErrorCategory.AUTHENTICATION: self._handle_auth_error,
+            ErrorCategory.TIMEOUT: self._handle_timeout_error,
+            ErrorCategory.EXTERNAL_SERVICE: self._handle_external_service_error,
+            ErrorCategory.DATA_VALIDATION: self._handle_validation_error,
+            ErrorCategory.RESOURCE_EXHAUSTION: self._handle_resource_error,
+            ErrorCategory.INTERNAL_LOGIC: self._handle_internal_error
         }
     
     def classify_error(self, error_message: str, error_type: str, 
@@ -306,7 +306,7 @@ class EnhancedErrorHandler:
         
         # Get recovery strategy for error category
         strategy_func = self.recovery_strategies.get(
-            error_context.category.value,
+            error_context.category,
             self._handle_generic_error
         )
         
@@ -460,8 +460,8 @@ class EnhancedErrorHandler:
         step_counts = {}
         
         for error in self.error_history:
-            category_counts[error.category.value] = category_counts.get(error.category.value, 0) + 1
-            severity_counts[error.severity.value] = severity_counts.get(error.severity.value, 0) + 1
+            category_counts[error.category] = category_counts.get(error.category, 0) + 1
+            severity_counts[error.severity] = severity_counts.get(error.severity, 0) + 1
             step_counts[error.step_name] = step_counts.get(error.step_name, 0) + 1
         
         # Calculate recovery rate
@@ -475,7 +475,7 @@ class EnhancedErrorHandler:
             "step_distribution": step_counts,
             "recovery_rate": recovery_rate,
             "circuit_breaker_states": {
-                name: breaker.state.value 
+                name: breaker.state 
                 for name, breaker in self.circuit_breakers.items()
             }
         }

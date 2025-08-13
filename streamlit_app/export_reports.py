@@ -399,7 +399,7 @@ class ExportReportManager:
                     'Event ID': risk_event.event_id,
                     'Supplier ID': risk_event.supplier_id,
                     'Event Type': risk_event.event_type,
-                    'Severity': risk_event.severity.value,
+                    'Severity': risk_event.severity,
                     'Impact Score': risk_event.impact_score,
                     'Probability': risk_event.probability,
                     'Confidence': risk_event.confidence_level,
@@ -552,7 +552,7 @@ SUPPLIERS
             report += f"""
 {risk_event.event_id} - {risk_event.event_type.title()} Risk
   Supplier: {risk_event.supplier_id}
-  Severity: {risk_event.severity.value.title()}
+  Severity: {risk_event.severity.title()}
   Impact Score: {risk_event.impact_score:.1f}/10
   Probability: {risk_event.probability:.1%}
   Description: {risk_event.description}

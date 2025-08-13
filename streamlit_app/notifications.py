@@ -268,11 +268,11 @@ class StreamlitNotificationManager:
         for alert in alerts:
             table_data.append({
                 'ID': alert.alert_id[-8:],  # Last 8 characters
-                'Priority': alert.priority.value.upper(),
+                'Priority': alert.priority.upper(),
                 'Title': alert.title,
                 'Supplier': alert.supplier_id,
                 'Created': alert.created_at.strftime('%m/%d %H:%M'),
-                'Status': alert.status.value.upper(),
+                'Status': alert.status.upper(),
                 'Escalation': alert.escalation_level,
                 'Actions': len(alert.recommended_actions)
             })
@@ -338,8 +338,8 @@ class StreamlitNotificationManager:
                 **Alert ID:** {alert.alert_id}  
                 **Event ID:** {alert.event_id}  
                 **Supplier ID:** {alert.supplier_id}  
-                **Priority:** {alert.priority.value.upper()}  
-                **Status:** {alert.status.value.upper()}  
+                **Priority:** {alert.priority.upper()}  
+                **Status:** {alert.status.upper()}  
                 **Created:** {alert.created_at.strftime('%Y-%m-%d %H:%M:%S')}
                 """)
             

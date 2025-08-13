@@ -763,7 +763,7 @@ class RiskEventGenerator:
         # Count by severity
         events_by_severity = {}
         for event in risk_events:
-            severity = event.severity if isinstance(event.severity, str) else event.severity.value
+            severity = event.severity
             events_by_severity[severity] = events_by_severity.get(severity, 0) + 1
         
         # Calculate averages

@@ -49,7 +49,7 @@ class AuditEvent:
     def to_dict(self) -> Dict[str, Any]:
         """Convert audit event to dictionary."""
         data = asdict(self)
-        data['event_type'] = self.event_type.value
+        data['event_type'] = self.event_type
         data['timestamp'] = self.timestamp.isoformat()
         return data
 
@@ -376,7 +376,7 @@ class WorkflowAuditLogger:
         # Count events by type
         event_counts = {}
         for event in events:
-            event_type = event.event_type.value
+            event_type = event.event_type
             event_counts[event_type] = event_counts.get(event_type, 0) + 1
         
         # Get error events
